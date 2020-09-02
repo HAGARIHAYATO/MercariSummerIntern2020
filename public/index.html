@@ -30,14 +30,14 @@
 
     // 実行ボタンを押されたときの処理
     async function run() {
-        console.clear();
+        console.clear()
         await go.run(inst);
         inst = await WebAssembly.instantiate(mod, go.importObject);
     }
 </script>
 
-<input type="text" id="condition">
-<input type="text" id="">
+<input type="text" id="condition" autocomplete="on">
+<input type="text" id="packName" autocomplete="on">
 
 <!-- 実行ボタン -->
 <button onClick="run();" id="runButton" disabled>Run</button>
