@@ -75,6 +75,7 @@ input[type="text"] {
     border: solid 1px red;
     border-radius: 10px;
     padding: .6% 2%;
+    cursor: pointer;
 }
 
 #terminal {
