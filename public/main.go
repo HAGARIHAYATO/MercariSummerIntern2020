@@ -9,7 +9,11 @@ import (
 
 //var array = []string{"fmt", "go/ast", "strings", "golang.org/x/tools/go/packages"}
 //var expr = "//*[@type='CallExpr']/Fun[@type='Ident' and @Name='panic']"
-
+var document = js.Global().Get("document")
+var prefix = document.Call("getElementById", "prefix")
+var terminal = document.Call("getElementById", "terminal")
+var pkg = document.Call("getElementById", "packName")
+var condition = document.Call("getElementById", "condition")
 
 
 func main() {
@@ -27,21 +31,12 @@ func registerCallbacks() {
 
 // terminal内をリセット
 func resetBtn(this js.Value, args []js.Value) interface{} {
-	var document = js.Global().Get("document")
-	var prefix = document.Call("getElementById", "prefix")
-	var terminal = document.Call("getElementById", "terminal")
 	terminal.Set("innerHTML", "")
 	prefix.Set("innerText", "~ $")
 	return nil
 }
 
 func pushBtn(this js.Value, args []js.Value) interface{} {
-	var document = js.Global().Get("document")
-	var prefix = document.Call("getElementById", "prefix")
-	var terminal = document.Call("getElementById", "terminal")
-	var pkg = document.Call("getElementById", "packName")
-	var condition = document.Call("getElementById", "condition")
-
 	expr := condition.Get("value").String()
 	packName := pkg.Get("value").String()
 	array := strings.Fields(packName)
