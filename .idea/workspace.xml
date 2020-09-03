@@ -11,12 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1f605b38-3e04-4d3f-8a47-5066e982a172" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/mercari2020.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/mercari2020.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/public/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/main.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/public/main.wasm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/wasm_exec.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/wasm_exec.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/usecase/query_usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/usecase/query_usecase.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,9 +32,6 @@
   <component name="GOROOT" path="/usr/local/Cellar/go/1.15/libexec" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/go.mod" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1gtrdPfrGZl1kEXUw0yLBKOGL8Z" />
   <component name="ProjectViewState">

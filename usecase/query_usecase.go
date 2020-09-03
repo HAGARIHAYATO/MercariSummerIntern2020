@@ -20,6 +20,7 @@ func QueryLoad(expr string, array ...string) ([]string, error) {
 func QueryLoader(expr string, array ...string) ([]string, error) {
 	cfg := &packages.Config{Mode: packages.NeedFiles | packages.NeedSyntax | packages.NeedTypes | packages.NeedDeps}
 	// 時間がかかるからwasmの処理で弾かれる？
+	// error ex... "'go list' driver requires 'go', but executable file not found in $PATH"
 	pList, err := packages.Load(cfg, array...)
 	if err != nil {
 		return nil, err

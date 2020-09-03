@@ -1,5 +1,6 @@
 github.com/antchfx/xpath v1.1.10 h1:cJ0pOvEdN/WvYXxvRrzQH9x5QWKpzHacYO8qzCcDYAg=
 github.com/antchfx/xpath v1.1.10/go.mod h1:Yee4kTMuNiPYJ7nSNorELQMr1J33uOpXDMByNYhvtNk=
+github.com/google/go-cmp v0.5.1 h1:JFrFEBb2xKufg6XkJsJr+WbKb4FQlURi5RUcBveYu9k=
 github.com/google/go-cmp v0.5.1/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/gostaticanalysis/astquery v0.0.0-20200823120951-321f091076cd h1:SV3iORMaJoZQEbyBKNFvTxEJIVpVzC+gCqMBVIanDdU=
 github.com/gostaticanalysis/astquery v0.0.0-20200823120951-321f091076cd/go.mod h1:iXHulvYo7F+2uyd9ZtiuKQNTkH746J0nbKHcM2x6yh0=

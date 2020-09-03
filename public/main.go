@@ -58,7 +58,8 @@ func pushBtn(this js.Value, args []js.Value) interface{} {
 	}
 
 	// 帰ってきたクエリ配列をターミナルに展開
-	for _, q := range query {
+	for i, q := range query {
+		fmt.Println(string(i) + ":", q)
 		paragraph := document.Call("createElement", "p")
 		paragraph.Set("innerText", q)
 		terminal.Call("appendChild", paragraph)
