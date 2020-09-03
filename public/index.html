@@ -3,44 +3,64 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Manipulating DOM</title>
+    <title>frontend of the astquery</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-<!-- wasm_exec.jsを読み込む -->
+<div class="container">
+    <p class="title">Condition</p>
+    <p><input type="text" id="condition" autocomplete="on"></p>
+    <p class="title">Package</p>
+    <p><input type="text" id="packName" autocomplete="on"></p>
+    <button onClick="pushBtn('condition', 'packName');" id="runButton">Run</button>
+    <p class="title reset-parent">Result <span class="reset" onClick="resetBtn('condition', 'packName')">reset</span></p>
+    <div class="wrapper">
+        <div id="sentences">
+            <p id="prefix"> ~ $</p>
+            <div id="terminal"></div>
+        </div>
+    </div>
+</div>
+
+
 <script src="wasm_exec.js"></script>
 <script>
-    // WebAssembly.instantiateStreamingがない場合のポリフィル
-    if (!WebAssembly.instantiateStreaming) {
-        WebAssembly.instantiateStreaming = async (resp, importObject) => {
-            const source = await (await resp).arrayBuffer();
-            return await WebAssembly.instantiate(source, importObject);
-        };
-    }
+    // if (!WebAssembly.instantiateStreaming) {
+    //     WebAssembly.instantiateStreaming = async (resp, importObject) => {
+    //         const source = await (await resp).arrayBuffer();
+    //         return await WebAssembly.instantiate(source, importObject);
+    //     };
+    // }
 
-    // main.wasmにビルドされたGoのプログラムを読み込む
-    const go = new Go();
-    let mod, inst;
-    WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
-        mod = result.module;
-        inst = result.instance;
-        // 実行ボタンを有効にする
-        document.getElementById("runButton").disabled = false;
-    });
+    // const go = new Go();
+    // let mod, inst;
+    // WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+    //     mod = result.module;
+    //     inst = result.instance;
+    //
+    //     document.getElementById("runButton").disabled = false;
+    // });
+    //
+    // async function run() {
+    //     console.clear()
+    //     await go.run(inst);
+    //     inst = await WebAssembly.instantiate(mod, go.importObject);
+    // }
 
-    // 実行ボタンを押されたときの処理
+    (async () => {
+        const go = new Go();
+        const { instance } = await WebAssembly.instantiateStreaming(
+            fetch('main.wasm'),
+            go.importObject
+        );
+        await go.run(instance);
+    })();
     async function run() {
-        console.clear()
+        console.clear();
         await go.run(inst);
-        inst = await WebAssembly.instantiate(mod, go.importObject);
+        inst = await WebAssembly.instantiate()
     }
 </script>
-
-<input type="text" id="condition" autocomplete="on">
-<input type="text" id="packName" autocomplete="on">
-
-<!-- 実行ボタン -->
-<button onClick="run();" id="runButton" disabled>Run</button>
 </body>
-
 </html>

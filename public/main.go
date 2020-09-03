@@ -2,68 +2,70 @@ package main
 
 import (
 	"fmt"
-	"github.com/gostaticanalysis/astquery"
-	"go/ast"
-	"golang.org/x/tools/go/packages"
-	"os"
-	//"syscall/js"
+	"github.com/hagarihayato/mercari2020/usecase"
+	"strings"
+	"syscall/js"
 )
 
-func main() {
-	// グローバルオブジェクト（Webブラウザはwindow）の取得
-	//window := js.Global()
+//var array = []string{"fmt", "go/ast", "strings", "golang.org/x/tools/go/packages"}
+//var expr = "//*[@type='CallExpr']/Fun[@type='Ident' and @Name='panic']"
+var document = js.Global().Get("document")
+var prefix = document.Call("getElementById", "prefix")
+var terminal = document.Call("getElementById", "terminal")
+var condition = document.Call("getElementById", "condition")
+var pkg = document.Call("getElementById", "packName")
 
-	// window.document.getElementById("message")を実行
-	//condition := window.Get("document").Call("getElementById", "condition").String()
-	//packName := window.Get("document").Call("getElementById", "condition").String()
-	//select{}
-	array := []string{"fmt", "go/ast", "golang.org/x/tools/go/packages"}
-	expr := "//*[@type='CallExpr']/Fun[@type='Ident' and @Name='panic']"
-	query := queryLoader(expr, array)
-	fmt.Println("------------", query, "-------------")
+
+
+func main() {
+	c := make(chan struct{}, 0)
+	println("Go WebAssembly Initialized")
+	registerCallbacks()
+	<-c
 }
 
-func queryLoader(expr string, array []string) []string {
-	cfg := &packages.Config{Mode: packages.NeedFiles | packages.NeedSyntax | packages.NeedTypes | packages.NeedDeps}
-	pkgs, err := packages.Load(cfg, array...)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "load: %v\n", err)
-		os.Exit(1)
-	}
-	if packages.PrintErrors(pkgs) > 0 {
-		os.Exit(1)
-	}
-	for _, pkg := range pkgs {
-		e := astquery.New(pkg.Fset, pkg.Syntax, nil)
-		v, err := e.Eval(expr)
-		if err != nil {
-			panic(err)
-		}
-		switch v := v.(type) {
-		case []ast.Node:
-			queryArray := []string{}
-			for _, n := range v {
-				fmt.Printf("%[1]T %[1]v\n", n)
-				queryArray = append(queryArray, fmt.Sprintf("%[1]T %[1]v\n", n))
-			}
-			return queryArray
-		default:
-			//rv := reflect.ValueOf(v)
-			//switch rv.Kind() {
-			//case reflect.Array, reflect.Slice:
-			//	for i := 0; i < rv.Len(); i++ {
-			//		fmt.Println(rv.Index(i).Interface())
-			//	}
-			//case reflect.Map:
-			//	for _, key := range rv.MapKeys() {
-			//		val := rv.MapIndex(key)
-			//		fmt.Printf("%v:%v\n", key.Interface(), val.Interface())
-			//	}
-			//default:
-			//	fmt.Println(v)
-			//}
-		}
-	}
+func registerCallbacks() {
+	js.Global().Set("pushBtn", js.FuncOf(pushBtn))
+	js.Global().Set("resetBtn", js.FuncOf(resetBtn))
+}
+
+func resetBtn(this js.Value, args []js.Value) interface{} {
+	terminal.Set("innerHTML", "")
+	prefix.Set("innerText", "~ $")
 	return nil
+}
+
+func pushBtn(this js.Value, args []js.Value) interface{} {
+	expr := condition.Get("value").String()
+	packName := pkg.Get("value").String()
+	array := strings.Fields(packName)
+	if expr == "" || packName == "" { return nil }
+	if prefix.Get("innerText").String() == "~ $" {
+		prefix.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + packName)
+	} else {
+		pre := createElement("p")
+		pre.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + packName)
+		terminal.Call("appendChild", pre)
+	}
+
+	query, err := usecase.QueryLoader(expr, array...)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for _, a := range query {
+		paragraph := createElement("p")
+		s := fmt.Sprintf(a)
+		paragraph.Set("innerHTML", s)
+		terminal.Call("appendChild", paragraph)
+	}
+
+	pkg.Set("value", "")
+	condition.Set("value", "")
+	return nil
+}
+
+func createElement(elementName string) js.Value {
+	return document.Call("createElement", elementName)
 }
 
