@@ -52,16 +52,17 @@ func pushBtn(this js.Value, args []js.Value) interface{} {
 	}
 
 	// astquery実行
-	query, err := usecase.QueryLoader(expr, array...)
+	query, err := usecase.QueryLoader(expr, array)
 	if err != nil {
-		fmt.Println(err)
+		paragraph := document.Call("createElement", "p")
+		paragraph.Set("innerText", fmt.Sprintf("%[1]T %[1]v\n", err))
+		terminal.Call("appendChild", paragraph)
 	}
 
 	// 帰ってきたクエリ配列をターミナルに展開
-	for i, q := range query {
-		fmt.Println(string(i) + ":", q)
+	for _, q := range query {
 		paragraph := document.Call("createElement", "p")
-		paragraph.Set("innerText", q)
+		paragraph.Set("innerText", fmt.Sprintf("%[1]T %[1]v\n", q))
 		terminal.Call("appendChild", paragraph)
 	}
 
