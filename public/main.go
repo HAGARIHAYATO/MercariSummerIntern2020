@@ -9,11 +9,6 @@ import (
 
 //var array = []string{"fmt", "go/ast", "strings", "golang.org/x/tools/go/packages"}
 //var expr = "//*[@type='CallExpr']/Fun[@type='Ident' and @Name='panic']"
-var document = js.Global().Get("document")
-var prefix = document.Call("getElementById", "prefix")
-var terminal = document.Call("getElementById", "terminal")
-var condition = document.Call("getElementById", "condition")
-var pkg = document.Call("getElementById", "packName")
 
 
 
@@ -22,6 +17,7 @@ func main() {
 	println("Go WebAssembly Initialized")
 	registerCallbacks()
 	<-c
+	select {}
 }
 
 func registerCallbacks() {
@@ -31,12 +27,21 @@ func registerCallbacks() {
 
 // terminal内をリセット
 func resetBtn(this js.Value, args []js.Value) interface{} {
+	var document = js.Global().Get("document")
+	var prefix = document.Call("getElementById", "prefix")
+	var terminal = document.Call("getElementById", "terminal")
 	terminal.Set("innerHTML", "")
 	prefix.Set("innerText", "~ $")
 	return nil
 }
 
 func pushBtn(this js.Value, args []js.Value) interface{} {
+	var document = js.Global().Get("document")
+	var prefix = document.Call("getElementById", "prefix")
+	var terminal = document.Call("getElementById", "terminal")
+	var pkg = document.Call("getElementById", "packName")
+	var condition = document.Call("getElementById", "condition")
+
 	expr := condition.Get("value").String()
 	packName := pkg.Get("value").String()
 	array := strings.Fields(packName)
@@ -46,7 +51,7 @@ func pushBtn(this js.Value, args []js.Value) interface{} {
 	if prefix.Get("innerText").String() == "~ $" {
 		prefix.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + packName)
 	} else {
-		pre := createElement("p")
+		pre := document.Call("createElement", "p")
 		pre.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + packName)
 		terminal.Call("appendChild", pre)
 	}
@@ -59,8 +64,8 @@ func pushBtn(this js.Value, args []js.Value) interface{} {
 
 	// 帰ってきたクエリ配列をターミナルに展開
 	for _, q := range query {
-		paragraph := createElement("p")
-		paragraph.Set("innerHTML", q)
+		paragraph := document.Call("createElement", "p")
+		paragraph.Set("innerText", q)
 		terminal.Call("appendChild", paragraph)
 	}
 
@@ -68,9 +73,5 @@ func pushBtn(this js.Value, args []js.Value) interface{} {
 	pkg.Set("value", "")
 	condition.Set("value", "")
 	return nil
-}
-
-func createElement(elementName string) js.Value {
-	return document.Call("createElement", elementName)
 }
 
