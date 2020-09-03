@@ -4,5 +4,5 @@ go 1.15
 
 require (
 	github.com/gostaticanalysis/astquery v0.0.0-20200823120951-321f091076cd
-	golang.org/x/tools v0.0.0-20200903005429-2364a5e8fdcf
+	golang.org/x/tools v0.0.0-20200820180210-c8f393745106
 )
