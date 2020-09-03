@@ -29,6 +29,7 @@ func registerCallbacks() {
 	js.Global().Set("resetBtn", js.FuncOf(resetBtn))
 }
 
+// terminal内をリセット
 func resetBtn(this js.Value, args []js.Value) interface{} {
 	terminal.Set("innerHTML", "")
 	prefix.Set("innerText", "~ $")
@@ -39,6 +40,8 @@ func pushBtn(this js.Value, args []js.Value) interface{} {
 	expr := condition.Get("value").String()
 	packName := pkg.Get("value").String()
 	array := strings.Fields(packName)
+
+	// terminal内のHTML書き換え
 	if expr == "" || packName == "" { return nil }
 	if prefix.Get("innerText").String() == "~ $" {
 		prefix.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + packName)
@@ -48,18 +51,20 @@ func pushBtn(this js.Value, args []js.Value) interface{} {
 		terminal.Call("appendChild", pre)
 	}
 
+	// astquery実行
 	query, err := usecase.QueryLoader(expr, array...)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	for _, a := range query {
+	// 帰ってきたクエリ配列をターミナルに展開
+	for _, q := range query {
 		paragraph := createElement("p")
-		s := fmt.Sprintf(a)
-		paragraph.Set("innerHTML", s)
+		paragraph.Set("innerHTML", q)
 		terminal.Call("appendChild", paragraph)
 	}
 
+	// フォーム初期化
 	pkg.Set("value", "")
 	condition.Set("value", "")
 	return nil
