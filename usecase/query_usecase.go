@@ -35,9 +35,6 @@ func QueryLoader(expr string, array []string) ([]ast.Node, error) {
 		}
 		switch v := v.(type) {
 		case []ast.Node:
-			//for _, n := range v {
-			//	queryArray = append(queryArray, fmt.Sprintf("%[1]T %[1]v\n", n))
-			//}
 			queryArray = v
 		}
 	}
