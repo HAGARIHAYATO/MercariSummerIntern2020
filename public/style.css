@@ -4,9 +4,13 @@
     box-sizing: border-box;
 }
 
+body {
+    padding: 35px 0;
+}
+
 .container {
     width: 50%;
-    margin: 30px auto 0 auto;
+    margin: 0 auto;
 }
 
 .title {
@@ -52,7 +56,6 @@ input[type="text"] {
 
 #code {
     padding: 3%;
-    border: solid 1px black;
     min-height: 100%;
     background-color: #FEFFDC;
 }
@@ -62,6 +65,7 @@ input[type="text"] {
     width: 50%;
     height: 400px;
     overflow-y: scroll;
+    border: solid 1px black;
 }
 
 #sentences {
@@ -93,5 +97,12 @@ input[type="text"] {
 
 #terminal {
     width: 100%;
+}
+
+#message {
+    color: red;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
