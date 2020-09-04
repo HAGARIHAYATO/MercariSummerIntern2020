@@ -17,6 +17,7 @@ var condition = document.Call("getElementById", "condition")
 var hiddenField = document.Call("getElementById", "hiddenField")
 var prefix = document.Call("getElementById", "prefix")
 var terminal = document.Call("getElementById", "terminal")
+var message = document.Call("getElementById", "message")
 
 func main() {
 	c := make(chan struct{}, 0)
@@ -32,10 +33,10 @@ func registerCallbacks() {
 
 func pushBtn(this js.Value, args []js.Value) interface{} {
 	expr := condition.Get("value").String()
-	//expr := "//*[@type=\"CallExpr\"]/Fun[@type=\"Ident\" and @Name=\"len\"]"
 	fileContent := hiddenField.Get("value").String()
 
 	if expr == "" { return nil }
+	if fileContent == "" { return nil }
 	if prefix.Get("innerText").String() == "~ $" {
 		prefix.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + importFile.Get("value").String())
 	} else {
@@ -54,24 +55,21 @@ func pushBtn(this js.Value, args []js.Value) interface{} {
 	//// astquery実行
 	query, err := usecase.QueryLoader(fs, expr, f)
 	if err != nil {
-
+		message.Set("innerText", fmt.Sprintf("error: %[1]s , please reload this page", err))
 		panic(err)
 	}
 
 	// 帰ってきたクエリを展開
 	for _, q := range query {
-		fmt.Println(fmt.Sprintf("%[1]T  %[1]v", q))
-
 		paragraph := document.Call("createElement", "p")
 		paragraph.Set("innerText", fmt.Sprintf("%[1]T %[1]v\n", q))
-		fmt.Println(fmt.Sprintf("%[1]T %[1]v\n", q))
 		terminal.Call("appendChild", paragraph)
 	}
 
 	// フォーム初期化
 	//importFile.Set("files[0]", "")
 	//importFile.Set("value", "")
-	condition.Set("value", "")
+	//condition.Set("value", "")
 	return nil
 }
 
