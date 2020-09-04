@@ -3,18 +3,20 @@ package main
 import (
 	"fmt"
 	"github.com/hagarihayato/mercari2020/usecase"
-	"strings"
+	"go/ast"
+	"go/parser"
+	"go/token"
 	"syscall/js"
 )
 
 //var array = []string{"fmt", "go/ast", "strings", "golang.org/x/tools/go/packages"}
 //var expr = "//*[@type='CallExpr']/Fun[@type='Ident' and @Name='panic']"
 var document = js.Global().Get("document")
+var importFile = document.Call("getElementById", "file")
+var condition = document.Call("getElementById", "condition")
+var hiddenField = document.Call("getElementById", "hiddenField")
 var prefix = document.Call("getElementById", "prefix")
 var terminal = document.Call("getElementById", "terminal")
-var pkg = document.Call("getElementById", "packName")
-var condition = document.Call("getElementById", "condition")
-
 
 func main() {
 	c := make(chan struct{}, 0)
@@ -26,48 +28,49 @@ func main() {
 
 func registerCallbacks() {
 	js.Global().Set("pushBtn", js.FuncOf(pushBtn))
-	js.Global().Set("resetBtn", js.FuncOf(resetBtn))
-}
-
-// terminal内をリセット
-func resetBtn(this js.Value, args []js.Value) interface{} {
-	terminal.Set("innerHTML", "")
-	prefix.Set("innerText", "~ $")
-	return nil
 }
 
 func pushBtn(this js.Value, args []js.Value) interface{} {
 	expr := condition.Get("value").String()
-	packName := pkg.Get("value").String()
-	array := strings.Fields(packName)
+	//expr := "//*[@type=\"CallExpr\"]/Fun[@type=\"Ident\" and @Name=\"len\"]"
+	fileContent := hiddenField.Get("value").String()
 
-	// terminal内のHTML書き換え
-	if expr == "" || packName == "" { return nil }
+	if expr == "" { return nil }
 	if prefix.Get("innerText").String() == "~ $" {
-		prefix.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + packName)
+		prefix.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + importFile.Get("value").String())
 	} else {
 		pre := document.Call("createElement", "p")
-		pre.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + packName)
+		pre.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + importFile.Get("value").String())
 		terminal.Call("appendChild", pre)
 	}
 
-	// astquery実行
-	query, err := usecase.QueryLoader(expr, array)
+	fs := token.NewFileSet()
+	f, _ := parser.ParseFile(fs, "main.go", fileContent, 0)
+
+
+	ast.Print(fs, f)
+
+
+	//// astquery実行
+	query, err := usecase.QueryLoader(fs, expr, f)
 	if err != nil {
-		paragraph := document.Call("createElement", "p")
-		paragraph.Set("innerText", fmt.Sprintf("%[1]T %[1]v\n", err))
-		terminal.Call("appendChild", paragraph)
+
+		panic(err)
 	}
 
-	// 帰ってきたクエリ配列をターミナルに展開
+	// 帰ってきたクエリを展開
 	for _, q := range query {
+		fmt.Println(fmt.Sprintf("%[1]T  %[1]v", q))
+
 		paragraph := document.Call("createElement", "p")
 		paragraph.Set("innerText", fmt.Sprintf("%[1]T %[1]v\n", q))
+		fmt.Println(fmt.Sprintf("%[1]T %[1]v\n", q))
 		terminal.Call("appendChild", paragraph)
 	}
 
 	// フォーム初期化
-	pkg.Set("value", "")
+	//importFile.Set("files[0]", "")
+	//importFile.Set("value", "")
 	condition.Set("value", "")
 	return nil
 }
