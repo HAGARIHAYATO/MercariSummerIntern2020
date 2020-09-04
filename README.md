@@ -8,4 +8,4 @@
 
 #### 立ち上げ
 ```cd public && \
-./run.sh```
+./run.sh
