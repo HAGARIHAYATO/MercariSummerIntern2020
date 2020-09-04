@@ -29,6 +29,7 @@ func main() {
 
 func registerCallbacks() {
 	js.Global().Set("pushBtn", js.FuncOf(pushBtn))
+	js.Global().Set("resetBtn", js.FuncOf(resetBtn))
 }
 
 func pushBtn(this js.Value, args []js.Value) interface{} {
@@ -37,6 +38,8 @@ func pushBtn(this js.Value, args []js.Value) interface{} {
 
 	if expr == "" { return nil }
 	if fileContent == "" { return nil }
+
+	// ターミナル内の処理
 	if prefix.Get("innerText").String() == "~ $" {
 		prefix.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + importFile.Get("value").String())
 	} else {
@@ -66,10 +69,13 @@ func pushBtn(this js.Value, args []js.Value) interface{} {
 		terminal.Call("appendChild", paragraph)
 	}
 
+	return nil
+}
+
+func resetBtn(this js.Value, args []js.Value) interface{} {
 	// フォーム初期化
-	//importFile.Set("files[0]", "")
-	//importFile.Set("value", "")
-	//condition.Set("value", "")
+	terminal.Set("innerHTML", "")
+	prefix.Set("innerText", "~ $")
 	return nil
 }
 

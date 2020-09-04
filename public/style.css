@@ -52,6 +52,7 @@ input[type="text"] {
 .result {
     width: 100%;
     display: flex;
+    position: relative;
 }
 
 #code {
@@ -76,25 +77,6 @@ input[type="text"] {
     min-height: 100%;
 }
 
-.reset-parent {
-    position: relative;
-}
-
-.reset {
-    color: red !important;
-    font-size: 12px;
-    text-align: right;
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    font-weight: lighter;
-    border: solid 1px red;
-    border-radius: 10px;
-    padding: .6% 2%;
-    cursor: pointer;
-}
-
 #terminal {
     width: 100%;
 }
@@ -104,5 +86,30 @@ input[type="text"] {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.resetField {
+    display: inline-block;
+    color: red !important;
+    font-size: 12px;
+    text-align: right;
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    font-weight: lighter;
+    border: solid 1px red;
+    border-radius: 5px;
+    padding: 0 1% 0 2.5%;
+    cursor: pointer;
+    height: 30px;
+    line-height: 28px;
+}
+
+.resetField img {
+    height: 18px;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
 }
 
