@@ -11,16 +11,11 @@
 <div class="container">
     <p class="title">Regexp</p>
     <p><input type="text" id="condition" autocomplete="on"></p>
-    <p class="title">Package</p>
-    <p><input type="text" id="packName" autocomplete="on"></p>
-    <button onClick="pushBtn('condition', 'packName');" id="runButton">Run</button>
-    <p class="title reset-parent">Result <span class="reset" id="resetBtn" onClick="resetBtn('condition', 'packName')">reset</span></p>
-    <div class="wrapper">
-        <div id="sentences">
-            <p id="prefix"> ~ $</p>
-            <div id="terminal"></div>
-        </div>
-    </div>
+    <p class="title">File</p>
+    <p><input type="file" id="file" autocomplete="on"></p>
+    <button onClick="pushBtn('condition', 'file');" id="runButton">Run</button>
+    <pre id="wrapper">
+    </pre>
 </div>
 
 
@@ -32,6 +27,16 @@
             return await WebAssembly.instantiate(source, importObject);
         };
     }
+
+    const wrapper = document.getElementById("wrapper")
+    const file = document.getElementById("file")
+    file.addEventListener("change", function(e) {
+        var reader = new FileReader()
+        reader.readAsText(file.files[0])
+        reader.onload = function() {
+            wrapper.innerHTML = reader.result;
+        }
+    },false);
 
     (async () => {
         const go = new Go();
