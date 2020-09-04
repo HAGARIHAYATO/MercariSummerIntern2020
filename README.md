@@ -1,4 +1,4 @@
-## astquery のフロントエンド
+## astquery のフロントエンド(WASM)
 
 #### 概要
 - goファイルに対して、astqueryをかける事ができる(パッケージにたいしてもできるようにしたかったが、packages.LoadがWASMではできなかった。)
