@@ -16,7 +16,6 @@
       <change beforePath="$PROJECT_DIR$/public/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/public/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/main.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/public/main.wasm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/usecase/query_usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/usecase/query_usecase.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

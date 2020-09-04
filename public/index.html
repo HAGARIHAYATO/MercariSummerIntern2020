@@ -14,8 +14,19 @@
     <p class="title">File</p>
     <p><input type="file" id="file" autocomplete="on"></p>
     <button onClick="pushBtn('condition', 'file');" id="runButton">Run</button>
-    <pre id="wrapper">
-    </pre>
+    <p><input type="hidden" id="hiddenField"></p>
+</div>
+<div class="result">
+    <div class="wrapper">
+        <div id="code">
+        </div>
+    </div>
+    <div class="wrapper">
+        <div id="sentences">
+            <p id="prefix"> ~ $</p>
+            <div id="terminal"></div>
+        </div>
+    </div>
 </div>
 
 
@@ -28,13 +39,16 @@
         };
     }
 
-    const wrapper = document.getElementById("wrapper")
+    const hiddenField = document.getElementById("hiddenField")
+    const code = document.getElementById("code")
+
     const file = document.getElementById("file")
     file.addEventListener("change", function(e) {
         var reader = new FileReader()
         reader.readAsText(file.files[0])
         reader.onload = function() {
-            wrapper.innerHTML = reader.result;
+            hiddenField.value = reader.result;
+            code.innerText = reader.result;
         }
     },false);
 

@@ -14,8 +14,9 @@ import (
 var document = js.Global().Get("document")
 var importFile = document.Call("getElementById", "file")
 var condition = document.Call("getElementById", "condition")
-var wrapper = document.Call("getElementById", "wrapper")
-
+var hiddenField = document.Call("getElementById", "hiddenField")
+var prefix = document.Call("getElementById", "prefix")
+var terminal = document.Call("getElementById", "terminal")
 
 func main() {
 	c := make(chan struct{}, 0)
@@ -30,18 +31,41 @@ func registerCallbacks() {
 }
 
 func pushBtn(this js.Value, args []js.Value) interface{} {
-	//expr := condition.Get("value").String()
-	expr := "//*[@type=\"CallExpr\"]/Fun[@type=\"Ident\" and @Name=\"len\"]"
-	fileContent := wrapper.Get("value")
+	expr := condition.Get("value").String()
+	//expr := "//*[@type=\"CallExpr\"]/Fun[@type=\"Ident\" and @Name=\"len\"]"
+	fileContent := hiddenField.Get("value").String()
+
+	if expr == "" { return nil }
+	if prefix.Get("innerText").String() == "~ $" {
+		prefix.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + importFile.Get("value").String())
+	} else {
+		pre := document.Call("createElement", "p")
+		pre.Set("innerText", "~ $ astquery" + "  " + "'" + expr + "'" + "  " + importFile.Get("value").String())
+		terminal.Call("appendChild", pre)
+	}
+
 	fs := token.NewFileSet()
 	f, _ := parser.ParseFile(fs, "main.go", fileContent, 0)
-	fmt.Println(fileContent)
+
+
 	ast.Print(fs, f)
+
+
 	//// astquery実行
 	query, err := usecase.QueryLoader(fs, expr, f)
-	fmt.Println(query)
 	if err != nil {
+
 		panic(err)
+	}
+
+	// 帰ってきたクエリを展開
+	for _, q := range query {
+		fmt.Println(fmt.Sprintf("%[1]T  %[1]v", q))
+
+		paragraph := document.Call("createElement", "p")
+		paragraph.Set("innerText", fmt.Sprintf("%[1]T %[1]v\n", q))
+		fmt.Println(fmt.Sprintf("%[1]T %[1]v\n", q))
+		terminal.Call("appendChild", paragraph)
 	}
 
 	// フォーム初期化
