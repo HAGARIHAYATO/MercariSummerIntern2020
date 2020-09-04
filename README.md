@@ -6,7 +6,6 @@
 #### usecase/
 - 機能?
 
-####
-- 立ち上げ
-cd public && \
-./run.sh
+#### 立ち上げ
+```cd public && \
+./run.sh```
