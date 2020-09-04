@@ -10,3 +10,6 @@
 ```
 cd public && \
 ./run.sh
+
+
+open http://localhost:8080
