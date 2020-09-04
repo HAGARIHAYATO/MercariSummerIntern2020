@@ -7,5 +7,6 @@
 - 機能?
 
 #### 立ち上げ
-```cd public && \
+```
+cd public && \
 ./run.sh
